@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -50,7 +51,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'notes.urls'
+ROOT_URLCONF = 'app.urls'
 
 TEMPLATES = [
     {
@@ -84,6 +85,7 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
 
 
 # Password validation
