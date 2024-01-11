@@ -1,0 +1,35 @@
+{% extends 'index.html' %}
+
+{% block content %}
+  <h2>Edit Note</h2>
+  <form id="noteForm" method="post" action="">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Save">
+  </form>
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+    {% comment %} $(document).ready(function () {
+      // Automatically save note when content changes
+      $('#id_content').on('input', function () {
+        autoSave();
+      });
+
+      function autoSave() {
+        // Set the note ID in the form before sending
+        $('#id').val('{{ note.id }}');
+        
+        $.ajax({
+          url: '',
+          type: 'post',
+          data: $('#noteForm').serialize(),
+          success: function (data) {
+            // Optional: You can provide user feedback here if needed
+            console.log('Note automatically saved!');
+          },
+        });
+      }
+    }); {% endcomment %}
+  </script>
+{% endblock %}

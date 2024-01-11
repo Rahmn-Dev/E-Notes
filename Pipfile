@@ -8,6 +8,7 @@ django = "*"
 psycopg2 = "*"
 django-rest-framework = "*"
 requests = "*"
+django-widget-tweaks = "*"
 
 [dev-packages]
 
