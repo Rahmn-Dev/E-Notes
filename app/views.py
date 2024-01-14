@@ -1,17 +1,21 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Note
+from .models import Note, Workspace
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse
 import requests
 from .forms import NoteForm, WorkspaceForm
 
 
+def index(request):
+  
+    return render(request, 'base.html', )
+
 @login_required
 def note_list(request):
-    
+    workspaces = Workspace.objects.all()
     notes = Note.objects.filter(trashed=False)
 
-    return render(request, 'index.html', {'listnotes': notes})
+    return render(request, 'note/note_list.html', {'listnotes': notes, 'workspace': workspaces})
 
 @login_required
 def note_edit(request, pk):

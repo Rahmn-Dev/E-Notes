@@ -9,6 +9,7 @@ psycopg2 = "*"
 django-rest-framework = "*"
 requests = "*"
 django-widget-tweaks = "*"
+django-bleach = "*"
 
 [dev-packages]
 

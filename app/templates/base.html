@@ -1,0 +1,258 @@
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/kursor@0.1.6/dist/kursor.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- Main Quill library -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <title>E Notes</title>
+   
+    {% block extra_css %}
+    {% endblock %}
+    <style>
+        #preloader{
+            background: rgba(92, 146, 255, 0.05);
+            height: 100vh;
+            backdrop-filter: blur(2px);
+            width: 100%;
+            position: fixed;
+            z-index:100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+          #preloader svg {
+   
+            display: flex;
+          }
+          #preloader span{
+         
+            height:100px;
+            width:50px;
+         
+            
+          }
+          .ml13 {
+            font-size: 1.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5em;
+            font-weight: 600;
+          }
+          
+          .ml13 .letter {
+            display: inline-block;
+            line-height: 1em;
+          }
+
+          @keyframes rotate {
+            0% {
+              transform: rotate(0deg);
+            }
+            100% {
+              transform: rotate(360deg);
+            }
+          }
+          
+          .rotate-animation {
+            animation: rotate 2s linear infinite; /* Adjust the animation duration as desired */
+          }
+        a{ text-decoration: none; color: black;}
+     
+        body {
+            overflow: hidden;
+            height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            
+          }
+          main {
+            overflow-y: auto;
+            overflow-x: hidden;
+          }
+          .wrapper {
+            display: flex;
+            height: 100%;
+          }
+          @media (max-width: 500px) {
+            .wrapper {
+              flex-direction: column-reverse;
+            }
+            ul {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            
+          }
+          .wrapper_inner {
+            width: 90%;
+            margin: 0px auto;
+          }
+          .spinner {
+            margin: 100px auto;
+            width: 40px;
+            height: 40px;
+            position: relative;
+          }
+          
+          .cube1, .cube2 {
+            background-color: #333;
+            width: 15px;
+            height: 15px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            
+            -webkit-animation: sk-cubemove 1.8s infinite ease-in-out;
+            animation: sk-cubemove 1.8s infinite ease-in-out;
+          }
+          
+          .cube2 {
+            -webkit-animation-delay: -0.9s;
+            animation-delay: -0.9s;
+          }
+          
+          @-webkit-keyframes sk-cubemove {
+            25% { -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5) }
+            50% { -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg) }
+            75% { -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5) }
+            100% { -webkit-transform: rotate(-360deg) }
+          }
+          
+          @keyframes sk-cubemove {
+            25% { 
+              transform: translateX(42px) rotate(-90deg) scale(0.5);
+              -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5);
+            } 50% { 
+              transform: translateX(42px) translateY(42px) rotate(-179deg);
+              -webkit-transform: translateX(42px) translateY(42px) rotate(-179deg);
+            } 50.1% { 
+              transform: translateX(42px) translateY(42px) rotate(-180deg);
+              -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg);
+            } 75% { 
+              transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);
+              -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);
+            } 100% { 
+              transform: rotate(-360deg);
+              -webkit-transform: rotate(-360deg);
+            }
+          }
+          .loading::before,
+.loading::after {
+	content: '';
+	position: fixed;
+	z-index: 1000;
+}
+
+.loading::before {
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #ffffff; /* Change this to your background color */
+}
+
+.loading::after {
+	top: 50%;
+	left: 50%;
+	width: 60px;
+	height: 60px;
+	margin: -30px 0 0 -30px;
+	border-radius: 50%;
+	opacity: 0.4;
+	background: #3498db; /* Change this to your loader color */
+	animation: loaderAnim 0.7s linear infinite alternate forwards;
+}
+
+@keyframes loaderAnim {
+	to {
+		opacity: 1;
+		transform: scale3d(0.5, 0.5, 1);
+	}
+}
+    </style>
+</head>
+
+<body>
+    {% comment %} <div id="preloader">
+        <div style="display:flex;justify-content:space-around;align-content:center;flex-wrap:nowrap;flex-direction:row">
+            <h1 class="ml13">Wait A Moments</h1>          
+            <div class="spinner">
+                <div class="cube1"></div>
+                <div class="cube2"></div>
+              </div>
+        </div>
+      </div> {% endcomment %}
+
+    <div class="wrapper">
+    {% include "sidebar.html" with workspace=workspace %}
+    <main> <div class="wrapper_inner">
+    {% block content %}
+    {% endblock%}
+    </div>
+    </main>
+    {% include "note/note_null.html" %}
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    {% comment %} <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>  {% endcomment %}
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/kursor@0.1.6/dist/kursor.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollTrigger.min.js"></script>
+   
+    
+
+      <script>
+      {% comment %} var loader = document.getElementById("preloader");
+     window.addEventListener("load", function(){
+            loader.style.display = "none";
+     })  {% endcomment %}
+   </script> 
+   
+    <script>
+        var kursorx = new kursor({
+            type: 4,
+            removeDefaultCursor: true,
+            
+        })
+    </script>
+    {% comment %} <script>
+        // Wrap every letter in a span
+var textWrapper = document.querySelector('.ml13');
+textWrapper.innerHTML = textWrapper.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
+
+anime.timeline({loop: true})
+  .add({
+    targets: '.ml13 .letter',
+    translateY: [100,0],
+    translateZ: 0,
+    opacity: [0,1],
+    easing: "easeOutExpo",
+    duration: 1400,
+    delay: (el, i) => 300 + 30 * i
+  }).add({
+    targets: '.ml13 .letter',
+    translateY: [0,-100],
+    opacity: [1,0],
+    easing: "easeInExpo",
+    duration: 1200,
+    delay: (el, i) => 100 + 30 * i
+  });
+
+    </script> {% endcomment %}
+    {% block extra_js %}
+    {% endblock %}
+</body>
+</html>

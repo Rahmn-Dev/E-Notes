@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'app',
     'rest_framework',
     'widget_tweaks',
+    'django_bleach',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +130,26 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+BLEACH_ALLOWED_TAGS = [
+    'p', 'b', 'i', 'u', 's', 'ul', 'ol', 'li', 'blockquote',
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'a', 'img',
+    'span', 'div', 'br', 'strong', 'em', 'del', 'code', 'pre'
+]
+
+BLEACH_ALLOWED_ATTRIBUTES = {
+    '*': ['style'],
+    'a': ['href', 'title', 'target'],
+    'img': ['src', 'alt', 'width', 'height'],
+}
+
+BLEACH_ALLOWED_STYLES = [
+    'color', 'font-size', 'text-align', 'text-decoration',
+    'font-weight', 'font-style', 'background-color',
+]
+
+# Use bleach's linkify filter to convert links in text to clickable links
+BLEACH_LINKIFY = True
+
+# Customize the URL schemes that are considered safe
+BLEACH_ALLOWED_PROTOCOLS = ['http', 'https', 'mailto']
