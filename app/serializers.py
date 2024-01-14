@@ -7,6 +7,7 @@ class notes(serializers.ModelSerializer):
     class Meta:
         model = models.Note
         fields = [
+            "id",
             "title",
             "content",
             "created_at",

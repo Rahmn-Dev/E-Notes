@@ -77,22 +77,22 @@
                 </div>
             </div>
             <li class="it" style="background-color:#f5f5f5;border-radius:10px;margin-top:15px;font-size:13px">
-                <a href="/" style="display:flex;flex-direction:row;flex-wrap:nowrap;align-content:center;justify-content:flex-start;align-items:center;gap:10px">
+                <a class="delayedLink" href="/" style="display:flex;flex-direction:row;flex-wrap:nowrap;align-content:center;justify-content:flex-start;align-items:center;gap:10px">
                   <div class="border img-profile" style="background-color:#fff;display:flex;align-content:center;justify-content:center;flex-wrap:nowrap;flex-direction:row;padding-left:9px;padding-top:4px;padding-bottom:6px;padding-right:9px;align-items:center;color:#000;font-weight:700">{{user.username|slice:":1"| upper }}</div>{{user.username| title}}
                 </a>
               </li>
             <li class="it"id="home" style="background-color:#f5f5f5;border-radius:10px;margin-top:15px;font-size:13px">
-                <a  href="/" style="display:flex;flex-direction:row;flex-wrap:nowrap;align-content:center;justify-content:space-between;align-items:center;gap:10px">
+                <a class="delayedLink" href="/" style="display:flex;flex-direction:row;flex-wrap:nowrap;align-content:center;justify-content:space-between;align-items:center;gap:10px">
                   <lord-icon   src="https://cdn.lordicon.com/cnpvyndp.json" trigger="morph" state="morph-home-2" target="#home" style="width:25px;height:25px"></lord-icon>Home
                 </a>
               </li>
         <li class="it" id="settings" style="background-color:#f5f5f5;border-radius:10px;margin-top:15px;font-size:13px">
-            <a  href="/" style="display:flex;flex-direction:row;flex-wrap:nowrap;align-content:center;justify-content:space-between;align-items:center;gap:10px">
+            <a class="delayedLink"  href="/" style="display:flex;flex-direction:row;flex-wrap:nowrap;align-content:center;justify-content:space-between;align-items:center;gap:10px">
               <lord-icon src="https://cdn.lordicon.com/lecprnjb.json" trigger="loop-on-hover" state="loop-cog" target="#settings" style="width:25px;height:25px"></lord-icon>Settings
             </a>
           </li>
         <li class="it"id="trash" style="background-color:#f5f5f5;border-radius:10px;margin-top:15px;font-size:13px">
-            <a  href="/" style="display:flex;flex-direction:row;flex-wrap:nowrap;align-content:center;justify-content:space-between;align-items:center;gap:10px">
+            <a class="delayedLink"  href="/trashlist/" style="display:flex;flex-direction:row;flex-wrap:nowrap;align-content:center;justify-content:space-between;align-items:center;gap:10px">
               <lord-icon  src="https://cdn.lordicon.com/wpyrrmcq.json" trigger="morph"  target="#trash" style="width:25px;height:25px"></lord-icon>Trash
             </a>
           </li>
@@ -102,13 +102,13 @@
         </li>
         {% for list in workspace %}
         <li class="it"id="a{{list.id}}" style="background-color:#f5f5f5;border-radius:10px;font-size:13px">
-            <a  href="/" style="display:flex;flex-direction:row;flex-wrap:nowrap;align-content:center;justify-content:space-between;align-items:center;gap:10px">
+            <a class="delayedLink"  href="/list/{{list.id}}/" style="display:flex;flex-direction:row;flex-wrap:nowrap;align-content:center;justify-content:space-between;align-items:center;gap:10px">
               <lord-icon  src="https://cdn.lordicon.com/eouimtlu.json" trigger="morph"  target="#a{{list.id}}" style="width:25px;height:25px"></lord-icon>{{list.name}}
             </a>
           </li>
         {% endfor %}
         <li class="it"id="workspace" style="background-color:#f5f5f5;border-radius:10px;margin-top:15px;font-size:13px">
-            <a  href="/" style="display:flex;flex-direction:row;flex-wrap:nowrap;align-content:center;justify-content:space-between;align-items:center;gap:10px">
+            <a class="delayedLink" href="/" style="display:flex;flex-direction:row;flex-wrap:nowrap;align-content:center;justify-content:space-between;align-items:center;gap:10px">
               <lord-icon  src="https://cdn.lordicon.com/xtnsvhie.json" trigger="hover"  target="#workspace" style="width:25px;height:25px"></lord-icon>Add Workspace
             </a>
           </li>
@@ -116,3 +116,6 @@
           
            </ul>
     </aside>
+{% block extra_js %}
+
+{% endblock %}

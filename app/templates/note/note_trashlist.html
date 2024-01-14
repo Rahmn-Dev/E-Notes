@@ -41,7 +41,7 @@ align-content: center;
 justify-content: space-between;
 align-items: center;
 ">
-    <h3 style="margin-top: 15px; margin-bottom: 15px;" >{{noteworkspace|title}}</h3>
+    <h3 style="margin-top: 15px; margin-bottom: 15px;" >Trash</h3>
     <a class="btn " id="addnew" title="Add New Notes" style="
     padding-top: 12px;
 "><lord-icon
@@ -61,10 +61,10 @@ align-items: center;
                 <p class=" reveal-text" style="opacity: 0;">{{list.updated_at|date:"d, M Y"}}</p>
             </div>
             <div class="col">
-                <h5 class=" reveal-text" style="opacity: 0; font-size: 18px;">{{list.title|slice:":39"}}</h5>
+                <h5 class=" reveal-text" style="opacity: 0; font-size: 18px;">{{list.title|slice:":10"}}</h5>
             </div>
             <div class="col">
-                <p class=" reveal-text" style="opacity: 0;">{{list.content|striptags|safe|slice:":50"}}...</p>
+                <p class=" reveal-text" style="opacity: 0;">{{list.content|striptags|safe|slice:":40"}}...</p>
             </div>
         </div>
         </a>
@@ -84,7 +84,46 @@ align-items: center;
 <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.js" crossorigin="anonymous"></script>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var observer = new IntersectionObserver(handleIntersect, { threshold: 0.2 });
+        var revealItems = document.querySelectorAll('.reveal-item');
     
+        revealItems.forEach(function(item, index) {
+          observer.observe(item);
+        });
+    
+        function handleIntersect(entries, observer) {
+          entries.forEach(function(entry, index) {
+            if (entry.isIntersecting) {
+              var targets = entry.target.querySelectorAll('.reveal-text, .card');
+    
+              anime({
+                targets: targets,
+                opacity: 1,
+                translateY: [20, 0],
+                duration: 800,
+                easing: 'easeInOutQuad',
+                delay: index * 500
+              });
+    
+              observer.unobserve(entry.target);
+            }
+          });
+        }
+    
+        // Reset the state when scrolling back up
+        window.addEventListener('scroll', function() {
+          if (window.scrollY === 0) {
+            revealItems.forEach(function(item) {
+              item.classList.remove('revealed');
+            });
+            observer.disconnect();
+            revealItems.forEach(function(item, index) {
+              observer.observe(item);
+            });
+          }
+        });
+      });
     
 </script>
 {% endblock %}

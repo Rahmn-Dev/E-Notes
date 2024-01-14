@@ -17,25 +17,26 @@
     {% endblock %}
     <style>
         #preloader{
-            background: rgba(92, 146, 255, 0.05);
+            background: white;
             height: 100vh;
-            backdrop-filter: blur(2px);
+            transition: opacity 5s ease-out;
             width: 100%;
             position: fixed;
             z-index:100;
             display: flex;
             justify-content: center;
             align-items: center;
+            
+          }
+          .fade-in {
+            opacity: 1;
           }
           #preloader svg {
-   
             display: flex;
           }
           #preloader span{
-         
             height:100px;
             width:50px;
-         
             
           }
           .ml13 {
@@ -43,6 +44,8 @@
             text-transform: uppercase;
             letter-spacing: 0.5em;
             font-weight: 600;
+            display: inline-block;
+            line-height: 1em;
           }
           
           .ml13 .letter {
@@ -69,7 +72,7 @@
             height: 100vh;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            
+            transition: opacity 0.5s ease; 
           }
           main {
             overflow-y: auto;
@@ -180,24 +183,40 @@
 </head>
 
 <body>
-    {% comment %} <div id="preloader">
+     <div id="preloader">
         <div style="display:flex;justify-content:space-around;align-content:center;flex-wrap:nowrap;flex-direction:row">
-            <h1 class="ml13">Wait A Moments</h1>          
-            <div class="spinner">
+            <h1 class="ml13" id="textis" style="transition: 0.5s ease; display: none; ">Wait A Moments</h1>          
+            {% comment %} <div class="spinner">
                 <div class="cube1"></div>
                 <div class="cube2"></div>
-              </div>
+              </div> {% endcomment %}
         </div>
-      </div> {% endcomment %}
+      </div> 
 
     <div class="wrapper">
     {% include "sidebar.html" with workspace=workspace %}
     <main> <div class="wrapper_inner">
-    {% block content %}
-    {% endblock%}
+      {% if request.path == '/' %}
+      {% elif '/trashlist/' in request.path %}
+      {% include "note/note_trashlist.html" with listnotes=listnotes %}  
+      
+      {% else %}
+    {% include "note/note_list.html" with listnotes=listnotes %}  
+    {% endif%}
+    
     </div>
-    </main>
-    {% include "note/note_null.html" %}
+    </main>          
+      {% if request.path == '/' %}
+        {% include "note/note_null.html" %}
+      {% elif '/list/' in request.path %}
+      {% include "note/note_null.html" %}
+      {% elif '/trashlist/' in request.path %}
+      {% include "note/note_null.html" %}
+      {% else %}
+           {% block content2 %}
+            {% endblock %}
+      {% endif %}
+
     </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -215,10 +234,64 @@
     
 
       <script>
-      {% comment %} var loader = document.getElementById("preloader");
-     window.addEventListener("load", function(){
-            loader.style.display = "none";
-     })  {% endcomment %}
+        var textWrapper = document.querySelector('.ml13');
+textWrapper.innerHTML = textWrapper.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
+window.addEventListener("load", function(){
+       var loader = document.getElementById("preloader");
+       var textiss = document.getElementById("textis");
+      event.preventDefault();
+
+        loader.classList.add('fade-in');
+        loader.style.display = "flex";
+        textiss.style.display = "block";
+        void loader.offsetWidth;
+      setTimeout(function() {
+        loader.style.display = "none";
+        runAfterPreloader();
+      }, 1000); // Adjust 
+     }) 
+    function runAfterPreloader(){
+   
+      var observer = new IntersectionObserver(handleIntersect, { threshold: 0.2 });
+      var revealItems = document.querySelectorAll('.reveal-item');
+  
+      revealItems.forEach(function(item, index) {
+        observer.observe(item);
+      });
+  
+      function handleIntersect(entries, observer) {
+        entries.forEach(function(entry, index) {
+          if (entry.isIntersecting) {
+            var targets = entry.target.querySelectorAll('.reveal-text, .card');
+  
+            anime({
+              targets: targets,
+              opacity: 1,
+              translateY: [20, 0],
+              duration: 800,
+              easing: 'easeInOutQuad',
+              delay: index * 500
+            });
+  
+            observer.unobserve(entry.target);
+          }
+        });
+      }
+  
+      // Reset the state when scrolling back up
+      window.addEventListener('scroll', function() {
+        if (window.scrollY === 0) {
+          revealItems.forEach(function(item) {
+            item.classList.remove('revealed');
+          });
+          observer.disconnect();
+          revealItems.forEach(function(item, index) {
+            observer.observe(item);
+          });
+        }
+      });
+   
+  }
    </script> 
    
     <script>
@@ -227,11 +300,21 @@
             removeDefaultCursor: true,
             
         })
+        document.addEventListener('selectstart', function (e) {
+          var isQuillEditor = e.target.closest('#quill-editor');
+
+          // If it's not within the Quill editor, prevent the default behavior
+          if (!isQuillEditor) {
+              e.preventDefault();
+          }
+        });
+        document.addEventListener('contextmenu', function (e) {
+          e.preventDefault();
+        });
     </script>
-    {% comment %} <script>
+    <script>
         // Wrap every letter in a span
-var textWrapper = document.querySelector('.ml13');
-textWrapper.innerHTML = textWrapper.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
+
 
 anime.timeline({loop: true})
   .add({
@@ -240,18 +323,48 @@ anime.timeline({loop: true})
     translateZ: 0,
     opacity: [0,1],
     easing: "easeOutExpo",
-    duration: 1400,
+    duration: 1200,
     delay: (el, i) => 300 + 30 * i
   }).add({
     targets: '.ml13 .letter',
-    translateY: [0,-100],
+    translateY: [0,-200],
     opacity: [1,0],
     easing: "easeInExpo",
     duration: 1200,
-    delay: (el, i) => 100 + 30 * i
+    delay: (el, i) => 300 + 30 * i
   });
 
-    </script> {% endcomment %}
+    </script>
+    <script>
+  var delayedLinks = document.querySelectorAll('a');
+
+  for (var i = 0; i < delayedLinks.length; i++) {
+    delayedLinks[i].addEventListener('click', function(event) {
+      event.preventDefault();
+      var loader = document.getElementById("preloader");
+      loader.classList.add('fade-in');
+      loader.style.display = "flex";
+      void loader.offsetWidth;
+
+      var targetHref = findClosestAnchor(event.target).href; // Capture href before the async operation
+      console.log("Captured href:", targetHref); // Log the captured href
+
+      setTimeout(function() {
+        window.location.href = targetHref;
+      }, 800);
+    });
+  }
+
+  function findClosestAnchor(element) {
+    while (element.tagName !== 'A' && element.parentElement) {
+      element = element.parentElement;
+    }
+    return element;
+  }
+</script>
+
+    
+    
     {% block extra_js %}
     {% endblock %}
 </body>
