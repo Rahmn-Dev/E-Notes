@@ -1,4 +1,3 @@
-{% extends 'base.html' %}
 {% load static %}
 {% load widget_tweaks %}
 {% block extra_css %}
@@ -13,14 +12,13 @@
   }
 </style>
 {% endblock %}
-{% block content2 %}
 <div class="container overflow-auto" style="width: 1500px;">
   <div class="row">
     <div class="col-12" id="back" style="display:flex;flex-direction:row;flex-wrap:nowrap;align-content:center;justify-content: space-between;align-items:center">
-        <a href="/list/{{note.workspace.id}}/">
+        <a href="/list/{{noteworkspaceid}}/">
         <lord-icon src="https://cdn.lordicon.com/vduvxizq.json" trigger="loop-on-hover" target="#back" style="width:25px;height:25px;transform:rotate(180deg);margin-top:15px"></lord-icon>
          </a>
-        <h4 style="margin-top:20px;margin-bottom:10px">{{note.workspace|title}}</h4>
+        <h4 style="margin-top:20px;margin-bottom:10px">{{noteworkspace|title}}</h4>
         <div style="
         display: flex;
         align-items: center;
@@ -76,17 +74,18 @@
       justify-content: flex-start;
       align-items: center;
       gap: 10px; 
-  "><p>Last Modified:</p><p>{{lastupdate}}<p></div>
+  "></div>
     </div>
     <div id="quill-editor">{{ form.content.value }}</div>
     <input type="hidden" name="content" id="quill-content-field">
 
-    {% render_field form.workspace class="form-control d-none" %}
-    {% render_field form.trashed id="trashed" class="d-none"  %}
+    {% render_field form.workspace class="form-control " %}
+    {% render_field form.trashed id="trashed" class="" option="1"  %}
+    {% render_field form.author  class=""  %}
   
   </form>
 </div>
-{% endblock %}
+
 {% block extra_js %}
 {% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script> {% endcomment %}
@@ -95,7 +94,7 @@
   document.addEventListener("DOMContentLoaded", function() {
     var quill = new Quill('#quill-editor', {
       theme: 'snow',
-      
+      placeholder: 'Compose an epic...',
       modules: {
         toolbar: [
        // [{ 'font': [] }],
@@ -140,54 +139,20 @@
     formData += '&content=' + encodeURIComponent(quill.root.innerHTML);
 
     $.ajax({
-      type: 'PUT',
-      url: '/api/v2/notes/{{note.id}}/',
+      type: 'POST',
+      url: '/api/v2/notes/',
       data: formData,
       headers: {
         "X-CSRFToken": "{{csrf_token }}"
       },
       success: function(response) {
-       
+       console.log("success", response.id)
       },
       error: function(error) {
-        
-      }
-    });
-  }
-  {% comment %} function refreshWorkspace() {
-    $.ajax({
-      url: '/api/v2/notes/',
-      type: 'GET',
-      dataType: 'json',
-      success: function (data) {
-        console.log(data);
- 
-        // Sort the data by updated_at in descending order
-        data.sort(function (a, b) {
-          return new Date(b.updated_at) - new Date(a.updated_at);
-        });
-
-        // Iterate over each item in the sorted array
-        $.each(data, function (index, item) {
-          // Select the corresponding .col-12
-          var col = $('.col-12').eq(index);
-
-          // Update the content dynamically
-          col.find('.reveal-text.updated-at').text(item.updated_at);
-          col.find('.reveal-text.title').text(item.title);
-          col.find('.reveal-text.contentis').text(item.content);
-
-          // Update the href attribute
-          col.find('a').attr('href', '/edit/' + item.id + '/');
-
-          // You can similarly update other parts of your HTML using the data received.
-        }); 
-      },
-      error: function (error) {
         console.error('Error fetching content data:', error);
       }
     });
-  } {% endcomment %}
+  }
 });
 
 </script>

@@ -12,6 +12,7 @@ urlpatterns = [
     path("list/<int:pk>/", views.note_list, name="note_list"),
     path("api/v2/", include(router.urls)),
     path("edit/<int:pk>/", views.note_edit, name="edit"),
+    path("add/<int:pk>/", views.note_create, name="add"),
     path("trash/<int:pk>/", views.note_trash, name="trash"),
     path("trashlist/", views.note_trashlist, name="trashlist"),
     path("workspace/", views.workspace_create, name="workspacecreate"),

@@ -42,7 +42,7 @@ justify-content: space-between;
 align-items: center;
 ">
     <h3 style="margin-top: 15px; margin-bottom: 15px;" >{{noteworkspace|title}}</h3>
-    <a class="btn " id="addnew" title="Add New Notes" style="
+    <a class="btn " id="addnew" href="/add/{{noteworkspaceid}}/" title="Add New Notes" style="
     padding-top: 12px;
 "><lord-icon
         src="https://cdn.lordicon.com/hqymfzvj.json"
@@ -58,13 +58,13 @@ align-items: center;
         <a href="/edit/{{list.id}}/" >
         <div class="card p-3 " style="font-size: 11px;background-color:#f5f5f5; border-radius: 18px;  border-color: #f5f5f5;"> 
             <div class="col">
-                <p class=" reveal-text" style="opacity: 0;">{{list.updated_at|date:"d, M Y"}}</p>
+                <p class=" reveal-text last_update" style="opacity: 0;">{{list.updated_at|date:"d, M Y"}}</p>
             </div>
             <div class="col">
-                <h5 class=" reveal-text" style="opacity: 0; font-size: 18px;">{{list.title|slice:":39"}}</h5>
+                <h5 class=" reveal-text title" style="opacity: 0; font-size: 18px;">{{list.title|slice:":39"}}</h5>
             </div>
             <div class="col">
-                <p class=" reveal-text" style="opacity: 0;">{{list.content|striptags|safe|slice:":50"}}...</p>
+                <p class=" reveal-text contentis" style="opacity: 0;">{{list.content|striptags|safe|slice:":50"}}...</p>
             </div>
         </div>
         </a>
@@ -82,9 +82,8 @@ align-items: center;
 {% comment %} {% endblock %} {% endcomment %}
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.js" crossorigin="anonymous"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
-    
-    
+    {% comment %} {% endcomment %}
 </script>
 {% endblock %}

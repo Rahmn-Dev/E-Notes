@@ -17,13 +17,20 @@ def index(request):
 def note_list(request, pk):
     workspaces = Workspace.objects.all()
     notes = Note.objects.filter(trashed=False, workspace=pk ).order_by('-updated_at')
-    getid = [list.workspace.name for list in notes]
-    noteworkspace = getid[0]
-    print(noteworkspace)
-    return render(request, 'base.html', {'listnotes': notes, 'workspace': workspaces, 'noteworkspace': noteworkspace})
+    getname = [list.workspace.name for list in notes]
+    getid = [list.workspace.id for list in notes]
+    noteworkspace = getname[0]
+    noteworkspaceid = getid[0]
+    # print(noteworkspace)
+    # if notes:
+    #     data = [{'title': note.title, 'content': note.content} for note in notes]
+    #     JsonResponse({'data': data})
+    
+    return render(request, 'base.html', {'listnotes': notes,'workspace': workspaces, 'noteworkspace': noteworkspace, 'noteworkspaceid': noteworkspaceid})
 
 @login_required
 def note_edit(request, pk):
+    workspaces = Workspace.objects.all()
     note = get_object_or_404(Note, pk=pk)
     notes = Note.objects.filter(trashed=False, ).order_by('-updated_at')
     lastupdate = Note.objects.filter(trashed=False, id = pk)
@@ -47,7 +54,7 @@ def note_edit(request, pk):
     else:
         form = NoteForm(instance=note, user=request.user)
 
-    return render(request, 'note/note_edit.html', {'form': form, 'note': note, 'listnotes': notes, 'noteworkspace': noteworkspace, 'lastupdate': resultlastupdated})
+    return render(request, 'note/note_edit.html', {'form': form, 'note': note, 'listnotes': notes, 'noteworkspace': noteworkspace, 'lastupdate': resultlastupdated, 'workspace': workspaces,})
 @login_required
 def note_trash(request, pk):
     note = get_object_or_404(Note, pk=pk)
@@ -73,12 +80,12 @@ def note_trash(request, pk):
     else:
         form = NoteForm(instance=note, user=request.user)
 
-    return render(request, 'note/note_trash.html', {'form': form, 'note': note, 'listnotes': notes, 'noteworkspace': noteworkspace, 'lastupdate': resultlastupdated})
+    return render(request, 'base.html', {'form': form, 'note': note, 'listnotes': notes, 'noteworkspace': noteworkspace, 'lastupdate': resultlastupdated})
 @login_required
 def note_trashlist(request):
     notes = Note.objects.filter(trashed=True, ).order_by('-updated_at')
-
-    return render(request, 'note/note_trashlist.html', { 'listnotes': notes,})
+    workspaces = Workspace.objects.all()
+    return render(request, 'base.html', { 'listnotes': notes,  'workspace': workspaces,})
 
 def workspace_create(request):
     if request.method == "POST":
@@ -90,3 +97,20 @@ def workspace_create(request):
     else:
         form = WorkspaceForm(user=request.user)
     return render(request, 'workspace/workspace_create.html', {'form': form})
+
+def note_create(request, pk):
+    workspaces = Workspace.objects.all()
+    notes = Note.objects.filter(trashed=False, workspace=pk ).order_by('-updated_at')
+    form = NoteForm()
+    getname = [list.workspace.name for list in notes]
+    getid = [list.workspace.id for list in notes]
+    noteworkspace = getname[0]
+    noteworkspaceid = getid[0]
+    if request.method == 'POST':
+        form = NoteForm(request.POST)
+        form.instance.workspace_id = pk
+        form.instance.author = request.user
+        if form.is_valid():
+            note = form.save(commit=False)
+            note.save()
+    return render(request, 'base.html', {'form': form, 'workspace': workspaces, 'listnotes': notes,  'noteworkspace': noteworkspace, 'noteworkspaceid': noteworkspaceid})

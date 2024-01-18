@@ -4,7 +4,7 @@ from .models import Note, Workspace
 class NoteForm(forms.ModelForm):
     class Meta:
         model = Note
-        fields = ['title', 'content', 'workspace', 'trashed']
+        fields = ['title', 'content', 'workspace', 'trashed', 'author']
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
